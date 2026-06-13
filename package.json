@@ -1,0 +1,8 @@
+{
+  "name": "micro-fulfillment-agent",
+  "version": "1.0.0",
+  "description": "FulfillmentOS static simulation dashboard",
+  "scripts": {
+    "dev": "npx serve ."
+  }
+}

@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Micro-Fulfillment Warehouse Agent Simulator - Interactive demonstration of multi-picker pathfinding with real-time heuristic modeling, mutex-locked inventory control, and traffic rerouting.">
+    <title>Micro-Fulfillment Agent Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="dashboard-grid">
+        <!-- Left: Main Simulation Viewport and Controls -->
+        <main class="main-column">
+            <header>
+                <div class="header-title">
+                    <h1 id="main-heading">FulfillmentOS</h1>
+                    <p>Agentic Multi-Picker Pathfinding & Inventory Engine</p>
+                </div>
+                <div class="clock-panel">
+                    <button id="btn-pause" class="sim-speed-btn active">⏸ Pause</button>
+                    <button id="btn-speed-1x" class="sim-speed-btn">1x Speed</button>
+                    <button id="btn-speed-2x" class="sim-speed-btn">2x Speed</button>
+                    <button id="btn-speed-5x" class="sim-speed-btn">5x Speed</button>
+                    <div id="sim-clock" class="clock">00:00:00</div>
+                </div>
+            </header>
+
+            <!-- KPIs -->
+            <section class="kpis-container" aria-label="Key Performance Indicators">
+                <div class="glass-card kpi-card green" id="kpi-throughput">
+                    <span class="kpi-label">Throughput</span>
+                    <span class="kpi-value" id="val-throughput">0</span>
+                    <span class="kpi-sub">Orders Fulfilled / Hr</span>
+                </div>
+                <div class="glass-card kpi-card blue" id="kpi-cycletime">
+                    <span class="kpi-label">Pick Cycle Time</span>
+                    <span class="kpi-value" id="val-cycletime">8.5s</span>
+                    <span class="kpi-sub">Average Pick to Pack</span>
+                </div>
+                <div class="glass-card kpi-card orange" id="kpi-distance">
+                    <span class="kpi-label">Walking Reduction</span>
+                    <span class="kpi-value" id="val-distance">15%</span>
+                    <span class="kpi-sub">vs. Static Baseline</span>
+                </div>
+                <div class="glass-card kpi-card pink" id="kpi-integrity">
+                    <span class="kpi-label">Crush Rate</span>
+                    <span class="kpi-value" id="val-integrity">0%</span>
+                    <span class="kpi-sub">Structural Damage Rate</span>
+                </div>
+                <div class="glass-card kpi-card purple" id="kpi-sla">
+                    <span class="kpi-label">SLA Compliance</span>
+                    <span class="kpi-value" id="val-sla">100%</span>
+                    <span class="kpi-sub">Stage Before Courier ETA</span>
+                </div>
+            </section>
+
+            <!-- Warehouse View -->
+            <section class="glass-card warehouse-container">
+                <div class="warehouse-header">
+                    <h2>Live Warehouse Floor</h2>
+                    <div class="warehouse-legend">
+                        <div class="legend-item">
+                            <span class="legend-color" style="background: rgba(245, 158, 11, 0.4); border-color: var(--accent-orange);"></span>
+                            <span>Heavy Shelf</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color" style="background: rgba(6, 182, 212, 0.4); border-color: var(--accent-blue);"></span>
+                            <span>Light Shelf</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color" style="background: rgba(236, 72, 153, 0.4); border-color: var(--accent-pink);"></span>
+                            <span>Fragile Shelf</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color" style="background: rgba(139, 92, 246, 0.3); border-color: var(--accent-purple);"></span>
+                            <span>Packing Bay</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color" style="background: rgba(255, 0, 0, 0.3); border-color: red;"></span>
+                            <span>Aisle Traffic</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="map-viewport">
+                    <canvas id="warehouse-canvas" width="800" height="600"></canvas>
+                </div>
+            </section>
+
+            <!-- Active Execution Pipeline Visualizer -->
+            <section class="glass-card pipeline-container" aria-label="System Execution Pipeline">
+                <h3 style="margin-bottom: 12px; font-size: 1.1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 8px;">System Execution Pipeline</h3>
+                <div class="pipeline-flow">
+                    <div class="pipeline-step" id="step-receive">
+                        <div class="step-num">01</div>
+                        <div class="step-title">Receive Request</div>
+                        <div class="step-desc">New order payload arrival</div>
+                        <div class="step-status" id="status-receive">Waiting</div>
+                    </div>
+                    <div class="pipeline-arrow">➔</div>
+                    <div class="pipeline-step" id="step-priority">
+                        <div class="step-num">02</div>
+                        <div class="step-title">Assign Priority</div>
+                        <div class="step-desc">Urgency deadline scan</div>
+                        <div class="step-status" id="status-priority">Waiting</div>
+                    </div>
+                    <div class="pipeline-arrow">➔</div>
+                    <div class="pipeline-step" id="step-preemption">
+                        <div class="step-num">03</div>
+                        <div class="step-title">Check Preemption</div>
+                        <div class="step-desc">Interruption check</div>
+                        <div class="step-status" id="status-preemption">Waiting</div>
+                    </div>
+                    <div class="pipeline-arrow">➔</div>
+                    <div class="pipeline-step" id="step-sstf">
+                        <div class="step-num">04</div>
+                        <div class="step-title">Apply SSTF / A*</div>
+                        <div class="step-desc">Pick sequence planning</div>
+                        <div class="step-status" id="status-sstf">Waiting</div>
+                    </div>
+                    <div class="pipeline-arrow">➔</div>
+                    <div class="pipeline-step" id="step-move">
+                        <div class="step-num">05</div>
+                        <div class="step-title">Move Robot</div>
+                        <div class="step-desc">Navigate to shelves</div>
+                        <div class="step-status" id="status-move">Waiting</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Gantt Chart - Preemptive Priority Scheduling Visualizer -->
+            <section class="glass-card gantt-container" aria-label="Gantt Chart - Scheduling Timeline">
+                <div class="gantt-header">
+                    <div>
+                        <h3>Gantt Chart — Preemptive Priority Scheduling</h3>
+                        <p class="gantt-subtitle">Rows = Workers (CPUs) · Bars = Batches (Processes) · Colors = Priority Level</p>
+                    </div>
+                    <div class="gantt-legend">
+                        <div class="gantt-legend-item">
+                            <span class="gantt-legend-swatch gantt-swatch-p1"></span>
+                            <span>P1 Normal</span>
+                        </div>
+                        <div class="gantt-legend-item">
+                            <span class="gantt-legend-swatch gantt-swatch-p3"></span>
+                            <span>P3 Emergency</span>
+                        </div>
+                        <div class="gantt-legend-item">
+                            <span class="gantt-legend-swatch gantt-swatch-packing"></span>
+                            <span>Packing Phase</span>
+                        </div>
+                        <div class="gantt-legend-item">
+                            <span class="gantt-legend-swatch gantt-swatch-preempted"></span>
+                            <span>⚡ Preempted</span>
+                        </div>
+                        <div class="gantt-legend-item">
+                            <span class="gantt-legend-swatch gantt-swatch-blocked"></span>
+                            <span>Blocked (Mutex)</span>
+                        </div>
+                        <div class="gantt-legend-item">
+                            <span class="gantt-legend-swatch gantt-swatch-idle"></span>
+                            <span>Idle</span>
+                        </div>
+                        <div class="gantt-legend-item">
+                            <span style="color: #22c55e; font-size: 10px;">▼</span>
+                            <span>Arrival</span>
+                        </div>
+                        <div class="gantt-legend-item">
+                            <span style="color: #10b981; font-size: 10px;">🔄</span>
+                            <span>Resume</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="gantt-viewport">
+                    <canvas id="gantt-canvas" width="1050" height="200"></canvas>
+                </div>
+                <div class="gantt-info">
+                    <span id="gantt-tick-counter">⏱ Tick: 0</span>
+                    <span id="gantt-preemption-count">⚡ Preemptions: 0</span>
+                    <span id="gantt-context-switches">🔄 Context Switches: 0</span>
+                    <span id="gantt-avg-wait">⏳ Avg Wait: 0s</span>
+                    <span id="gantt-avg-turnaround">📊 Avg TAT: 0s</span>
+                </div>
+                <!-- Process Scheduling Table -->
+                <div class="gantt-process-table-wrap">
+                    <table class="gantt-process-table" id="gantt-process-table">
+                        <thead>
+                            <tr>
+                                <th>Process (Batch)</th>
+                                <th>Priority</th>
+                                <th>Arrival</th>
+                                <th>Start</th>
+                                <th>Completion</th>
+                                <th>Wait Time</th>
+                                <th>Turnaround</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="gantt-process-tbody">
+                            <!-- Dynamic rows -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Controls Panel -->
+            <section class="glass-card controls-container">
+                <div class="sliders-panel">
+                    <h3>Heuristic Engine Tuning</h3>
+                    <div class="slider-group" style="margin-bottom: 12px;">
+                        <label for="select-routing-mode" style="font-size: 0.8rem; color: var(--text-secondary); font-weight: 600; display: block; margin-bottom: 4px;">Routing Mode (A* vs. SSTF):</label>
+                        <select id="select-routing-mode" class="sim-speed-btn" style="width: 100%; text-align: left; background: rgba(0,0,0,0.3); border: 1px solid var(--border-color); padding: 8px; border-radius: 8px; color: white; cursor: pointer; font-size: 0.8rem;">
+                            <option value="AStar">A* Heuristic (Safety/Sequence First)</option>
+                            <option value="SSTF">SSTF (Shortest Seek Time / Proximity First)</option>
+                        </select>
+                    </div>
+                    <div class="slider-group">
+                        <div class="slider-label">
+                            <span>Proximity Vector (Alpha - 40%)</span>
+                            <span id="label-alpha" class="val">0.40</span>
+                        </div>
+                        <input id="slider-alpha" type="range" min="0" max="1" step="0.05" value="0.40">
+                    </div>
+                    <div class="slider-group">
+                        <div class="slider-label">
+                            <span>Aisle Congestion Matrix (Beta - 25%)</span>
+                            <span id="label-beta" class="val">0.25</span>
+                        </div>
+                        <input id="slider-beta" type="range" min="0" max="1" step="0.05" value="0.25">
+                    </div>
+                    <div class="slider-group">
+                        <div class="slider-label">
+                            <span>Sequence Safety (Gamma - 20%)</span>
+                            <span id="label-gamma" class="val">0.20</span>
+                        </div>
+                        <input id="slider-gamma" type="range" min="0" max="1" step="0.05" value="0.20">
+                    </div>
+                    <div class="slider-group">
+                        <div class="slider-label">
+                            <span>Courier Urgency (Delta - 15%)</span>
+                            <span id="label-delta" class="val">0.15</span>
+                        </div>
+                        <input id="slider-delta" type="range" min="0" max="1" step="0.05" value="0.15">
+                    </div>
+                </div>
+
+                <div class="event-triggers">
+                    <h3>Event Injection Panel</h3>
+                    <div class="btn-grid" style="margin-bottom: 10px;">
+                        <button id="btn-spawn-order" class="btn btn-accent">📥 Spawn Random Order</button>
+                        <button id="btn-race-condition" class="btn btn-danger">⚡ Trigger Mutex Race</button>
+                        <button id="btn-restock" class="btn">🥫 Restock Inventory</button>
+                        <button id="btn-clear-traffic" class="btn">🟢 Clear Traffic Maps</button>
+                    </div>
+                    <button id="btn-spawn-emergency" class="btn btn-danger" style="width: 100%; background: linear-gradient(135deg, #f43f5e 0%, #be123c 100%); color: white; border-color: transparent; font-weight: 700; box-shadow: 0 0 10px rgba(244, 63, 94, 0.4); display: flex; align-items: center; justify-content: center; gap: 6px;">🚨 Spawn Emergency Order (Priority 3)</button>
+                    <p style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 8px;">
+                        💡 <strong>Interactive Floor:</strong> Click any pathway cell on the grid above to manually inject a BLE aisle congestion hotspot and watch pickers reroute.
+                    </p>
+                </div>
+            </section>
+        </main>
+
+        <!-- Right: Active State Sidebars -->
+        <aside class="sidebar-column">
+            <!-- Picker Status List -->
+            <section class="glass-card sidebar-section">
+                <div class="section-title">
+                    <h3>Floor Workers</h3>
+                    <span id="count-pickers">3 Active</span>
+                </div>
+                <div id="picker-list" class="scrollable-list">
+                    <!-- Dynamic pickers items -->
+                </div>
+            </section>
+
+            <!-- Order Queue -->
+            <section class="glass-card sidebar-section">
+                <div class="section-title">
+                    <h3>Order Queue</h3>
+                    <span id="count-orders">0 Pending</span>
+                </div>
+                <div id="order-list" class="scrollable-list">
+                    <!-- Dynamic orders items -->
+                </div>
+            </section>
+
+            <!-- Courier Tracker -->
+            <section class="glass-card sidebar-section">
+                <div class="section-title">
+                    <h3>Couriers</h3>
+                    <span id="count-couriers">0 EnRoute</span>
+                </div>
+                <div id="courier-list" class="scrollable-list">
+                    <!-- Dynamic courier cards -->
+                </div>
+            </section>
+
+            <!-- Console Log -->
+            <section class="glass-card sidebar-section" style="max-height: 300px;">
+                <div class="section-title">
+                    <h3>Log Console</h3>
+                </div>
+                <div id="console-logs" class="scrollable-list">
+                    <!-- Log entries -->
+                </div>
+            </section>
+        </aside>
+    </div>
+
+    <!-- Script loading order: Algorithms -> Simulation State -> Visualizer -->
+    <script src="agent.js"></script>
+    <script src="simulation.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
