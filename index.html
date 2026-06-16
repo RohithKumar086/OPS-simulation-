@@ -8,13 +8,34 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- Academic Credentials Header Banner -->
+    <div class="academic-header-card glass-card">
+        <div class="academic-logo-title">
+            <div class="academic-logo">🏫</div>
+            <div class="academic-title-text">
+                <h2>B.M.S. College of Engineering</h2>
+                <p class="affiliation">An Autonomous Institution Affiliated to VTU, Belagavi</p>
+                <p class="department">Department of Machine Learning</p>
+            </div>
+        </div>
+        <div class="academic-course-info">
+            <div class="course-code-badge">24AM4PCIAI</div>
+            <h3>Introduction to Artificial Intelligence</h3>
+            <p class="aat-title">Alternative Assessment Tool (AAT)</p>
+        </div>
+        <div class="academic-students-faculty">
+            <div class="meta-row"><strong>Topic:</strong> <span>Dynamic Dark-Store Micro-Fulfillment & Order Batching Agent</span></div>
+            <div class="meta-row"><strong>Submitted By:</strong> <span class="highlight-student">Rohith Kumar (1BM24AI129)</span></div>
+            <div class="meta-row"><strong>Faculty In-Charge:</strong> <span>Prof. Soniya L</span></div>
+        </div>
+    </div>
     <div class="dashboard-grid">
         <!-- Left: Main Simulation Viewport and Controls -->
         <main class="main-column">
             <header>
                 <div class="header-title">
-                    <h1 id="main-heading">FulfillmentOS</h1>
-                    <p>Agentic Multi-Picker Pathfinding & Inventory Engine</p>
+                    <h1 id="main-heading" style="font-size: 1.8rem; background: linear-gradient(135deg, #fff 40%, var(--accent-purple) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Dynamic Dark-Store Micro-Fulfillment & Order Batching Agent</h1>
+                    <p>A* Informed Search with Multi-Constraint Utility Modeling & Concurrency Locks</p>
                 </div>
                 <div class="clock-panel">
                     <button id="btn-pause" class="sim-speed-btn active">⏸ Pause</button>
@@ -124,80 +145,6 @@
                         <div class="step-desc">Navigate to shelves</div>
                         <div class="step-status" id="status-move">Waiting</div>
                     </div>
-                </div>
-            </section>
-
-            <!-- Gantt Chart - Preemptive Priority Scheduling Visualizer -->
-            <section class="glass-card gantt-container" aria-label="Gantt Chart - Scheduling Timeline">
-                <div class="gantt-header">
-                    <div>
-                        <h3>Gantt Chart — Preemptive Priority Scheduling</h3>
-                        <p class="gantt-subtitle">Rows = Workers (CPUs) · Bars = Batches (Processes) · Colors = Priority Level</p>
-                    </div>
-                    <div class="gantt-legend">
-                        <div class="gantt-legend-item">
-                            <span class="gantt-legend-swatch gantt-swatch-p1"></span>
-                            <span>P1 Normal</span>
-                        </div>
-                        <div class="gantt-legend-item">
-                            <span class="gantt-legend-swatch gantt-swatch-p3"></span>
-                            <span>P3 Emergency</span>
-                        </div>
-                        <div class="gantt-legend-item">
-                            <span class="gantt-legend-swatch gantt-swatch-packing"></span>
-                            <span>Packing Phase</span>
-                        </div>
-                        <div class="gantt-legend-item">
-                            <span class="gantt-legend-swatch gantt-swatch-preempted"></span>
-                            <span>⚡ Preempted</span>
-                        </div>
-                        <div class="gantt-legend-item">
-                            <span class="gantt-legend-swatch gantt-swatch-blocked"></span>
-                            <span>Blocked (Mutex)</span>
-                        </div>
-                        <div class="gantt-legend-item">
-                            <span class="gantt-legend-swatch gantt-swatch-idle"></span>
-                            <span>Idle</span>
-                        </div>
-                        <div class="gantt-legend-item">
-                            <span style="color: #22c55e; font-size: 10px;">▼</span>
-                            <span>Arrival</span>
-                        </div>
-                        <div class="gantt-legend-item">
-                            <span style="color: #10b981; font-size: 10px;">🔄</span>
-                            <span>Resume</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="gantt-viewport">
-                    <canvas id="gantt-canvas" width="1050" height="200"></canvas>
-                </div>
-                <div class="gantt-info">
-                    <span id="gantt-tick-counter">⏱ Tick: 0</span>
-                    <span id="gantt-preemption-count">⚡ Preemptions: 0</span>
-                    <span id="gantt-context-switches">🔄 Context Switches: 0</span>
-                    <span id="gantt-avg-wait">⏳ Avg Wait: 0s</span>
-                    <span id="gantt-avg-turnaround">📊 Avg TAT: 0s</span>
-                </div>
-                <!-- Process Scheduling Table -->
-                <div class="gantt-process-table-wrap">
-                    <table class="gantt-process-table" id="gantt-process-table">
-                        <thead>
-                            <tr>
-                                <th>Process (Batch)</th>
-                                <th>Priority</th>
-                                <th>Arrival</th>
-                                <th>Start</th>
-                                <th>Completion</th>
-                                <th>Wait Time</th>
-                                <th>Turnaround</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody id="gantt-process-tbody">
-                            <!-- Dynamic rows -->
-                        </tbody>
-                    </table>
                 </div>
             </section>
 

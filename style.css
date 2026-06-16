@@ -942,3 +942,126 @@ input[type="range"]::-webkit-slider-thumb:hover {
 .gantt-process-table .pt-status-suspended { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
 .gantt-process-table .pt-status-completed { background: rgba(16, 185, 129, 0.15); color: #34d399; }
 
+/* Academic Credentials Header Card */
+.academic-header-card {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 1fr;
+    gap: 20px;
+    max-width: 1600px;
+    margin: 0 auto 20px auto;
+    padding: 20px;
+    background: rgba(18, 18, 29, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+    align-items: center;
+}
+
+.academic-logo-title {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+    padding-right: 20px;
+}
+
+.academic-logo {
+    font-size: 2.5rem;
+}
+
+.academic-title-text h2 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    background: linear-gradient(135deg, #fff 40%, var(--accent-blue) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.academic-title-text .affiliation {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-top: 2px;
+}
+
+.academic-title-text .department {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--accent-blue);
+    margin-top: 4px;
+}
+
+.academic-course-info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+    padding-right: 20px;
+}
+
+.course-code-badge {
+    background: rgba(139, 92, 246, 0.15);
+    color: var(--accent-purple);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.75rem;
+    align-self: flex-start;
+    font-family: monospace;
+}
+
+.academic-course-info h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.academic-course-info .aat-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--accent-pink);
+    text-transform: uppercase;
+}
+
+.academic-students-faculty {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 0.85rem;
+}
+
+.academic-students-faculty .meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--text-secondary);
+    gap: 10px;
+}
+
+.academic-students-faculty .meta-row strong {
+    color: var(--text-primary);
+    white-space: nowrap;
+}
+
+.academic-students-faculty .highlight-student {
+    color: var(--accent-green);
+    font-weight: 700;
+    text-shadow: 0 0 8px rgba(16, 185, 129, 0.25);
+}
+
+/* Responsive adjustment for academic header */
+@media (max-width: 1200px) {
+    .academic-header-card {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    .academic-logo-title, .academic-course-info {
+        border-right: none;
+        padding-right: 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        padding-bottom: 15px;
+    }
+}
+
